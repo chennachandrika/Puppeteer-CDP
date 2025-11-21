@@ -4,9 +4,18 @@ function PuppeteerCDPMonitor() {
   const [logs, setLogs] = useState(null);
 
   const runCDP = async () => {
-    const response = await fetch("https://pyrkr8-4000.csb.app/run-cdp");
-    const data = await response.json();
-    setLogs(data);
+    try {
+      const response = await fetch("http://localhost:4000/run-cdp");
+      if (!response.ok) {
+        throw new Error(`Request failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setLogs(data);
+    } catch (error) {
+      console.error("Failed to run CDP", error);
+      setLogs({ error: error.message || "Unknown error" });
+    }
   };
 
   return (

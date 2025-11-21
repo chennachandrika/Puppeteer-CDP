@@ -18,6 +18,7 @@ app.get("/run-cdp", async (req, res) => {
   const browser = await puppeteer.launch({
     headless: false, // show browser
     defaultViewport: null,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
   const page = await browser.newPage();
@@ -28,7 +29,6 @@ app.get("/run-cdp", async (req, res) => {
   await client.send("DOM.enable");
   await client.send("Page.enable");
   await client.send("Runtime.enable");
-  await client.send("Input.enable");
 
   const events = [];
 
@@ -42,7 +42,7 @@ app.get("/run-cdp", async (req, res) => {
   // Visit ACE editor demo
   await page.goto("https://ace.c9.io/build/kitchen-sink.html");
 
-  await page.waitForTimeout(2000);
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   // Click editor
   await page.mouse.click(200, 200);
