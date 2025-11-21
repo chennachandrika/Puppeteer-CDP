@@ -1,0 +1,33 @@
+<!-- Parent App Page -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>App with Sandboxed Editor Iframe</title>
+  <script>
+    window.addEventListener("message", (event) => {
+      // Only trust messages from the editor's origin
+      if (event.origin !== "https://your-editor-domain.com") return;
+
+      if (event.data.type === "editorContent") {
+        console.log("Editor content:", event.data.content);
+        // Validate or monitor content to prevent malpractices
+      }
+    });
+
+    function requestSave() {
+      const iframe = document.getElementById("editorIframe");
+      iframe.contentWindow.postMessage({ type: "saveRequest" }, "https://your-editor-domain.com");
+    }
+  </script>
+</head>
+<body>
+  <h2>Your App</h2>
+  <iframe 
+    id="editorIframe"
+    src="http://localhost:8081/child.html"
+    sandbox="allow-scripts allow-same-origin"
+    width="800" height="600"
+  ></iframe>
+  <button onclick="requestSave()">Save Content</button>
+</body>
+</html>

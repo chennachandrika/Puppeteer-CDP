@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Editor</title>
+  <script>
+    function sendContent() {
+      window.parent.postMessage({ type: 'editorContent', content: document.getElementById('editor').value }, window.origin);
+    }
+
+    window.addEventListener("message", (event) => {
+      if (event.origin !== window.origin) return;
+      if (event.data.type === "saveRequest") {
+        alert("Save requested for: " + document.getElementById('editor').value);
+      }
+    });
+
+    setInterval(sendContent, 5000); // Periodic content sending
+  </script>
+</head>
+<body>
+  <textarea id="editor" style="width:100%; height:90%;"></textarea>
+</body>
+</html>
